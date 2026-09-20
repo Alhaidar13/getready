@@ -1,1 +1,577 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Starlight Todolist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <div class="brand">
+      <span class="brand-star">✦</span>
+      <span class="brand-name">Starlight <span class="brand-name-light">Todolist</span></span>
+      <span class="plan-badge" id="planBadge">FREE</span>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Buka menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home" class="nav-link active" data-section="home">Home</a></li>
+      <li><a href="#menu" class="nav-link" data-section="menu">Menu</a></li>
+      <li><a href="#board" class="nav-link" data-section="board">Papan</a></li>
+      <li><a href="#pomodoro" class="nav-link" data-section="pomodoro">Fokus</a></li>
+      <li><a href="#progress" class="nav-link" data-section="progress">Progress</a></li>
+      <li><a href="#account" class="nav-link" data-section="account">Akun</a></li>
+      <li><a href="#pricing" class="nav-link" data-section="pricing">Harga</a></li>
+      <li><a href="#about" class="nav-link" data-section="about">About Us</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===== HOME / HERO ===== -->
+<header class="hero" id="home">
+  <div class="hero-inner reveal">
+    <p class="eyebrow">✦ Rapikan harimu, satu bintang pada satu waktu</p>
+    <h1>Starlight Todolist</h1>
+    <p class="hero-desc">
+      Starlight Todolist adalah teman harian untuk mencatat rencana, mengatur jadwal,
+      dan menuntaskan tugas tanpa ribet. Tulis kegiatanmu, tandai kategorinya, pantau
+      progress dan streak-mu, lalu fokus kerjakan satu per satu bersama Pomodoro Timer.
+    </p>
+    <a href="#menu" class="btn-primary">Mulai Atur Tugas ↓</a>
+  </div>
+  <div class="hero-glow"></div>
+</header>
+
+<!-- ===== MENU: TODO LIST + CALENDAR ===== -->
+<main id="menu" class="menu-section">
+
+  <div class="grid-2">
+
+    <!-- TODO LIST BOX -->
+    <section class="box todo-box reveal">
+      <h2>Daftar Tugas Hari Ini</h2>
+      <p class="box-sub">Tambahkan kegiatanmu, pilih tanggal, kategori, dan prioritasnya.</p>
+
+      <div class="todo-usage" id="todoUsage">
+        <div class="todo-usage-bar"><div class="todo-usage-fill" id="todoUsageFill"></div></div>
+        <span id="todoUsageText">0 / 7 tugas (Free)</span>
+      </div>
+
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="todoSearch" placeholder="Cari tugas...">
+      </div>
+
+      <form id="todoForm" class="todo-form">
+        <input type="text" id="todoInput" placeholder="Tulis tugas baru..." required>
+        <input type="date" id="todoDate" required>
+        <select id="todoCategory" required>
+          <option value="" disabled selected>Kategori</option>
+          <option value="personal">Pribadi</option>
+          <option value="work">Kerja</option>
+          <option value="college">Kuliah/Project</option>
+        </select>
+        <select id="todoPriority" required>
+          <option value="" disabled selected>Prioritas</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+        <button type="submit" class="btn-add">+ Tambah</button>
+      </form>
+
+      <div class="todo-filter">
+        <button class="filter-btn active" data-filter="all">Semua</button>
+        <button class="filter-btn" data-filter="active">Belum Selesai</button>
+        <button class="filter-btn" data-filter="done">Selesai</button>
+      </div>
+      <div class="todo-filter cat-filter">
+        <button class="filter-btn cat-btn active" data-cat="all">Semua Kategori</button>
+        <button class="filter-btn cat-btn" data-cat="personal">Pribadi</button>
+        <button class="filter-btn cat-btn" data-cat="work">Kerja</button>
+        <button class="filter-btn cat-btn" data-cat="college">Kuliah/Project</button>
+      </div>
+
+      <ul id="todoList" class="todo-list"></ul>
+
+      <div class="todo-empty" id="todoEmpty">Belum ada tugas. Yuk tambahkan yang pertama! ⭐</div>
+    </section>
+
+    <!-- CALENDAR BOX -->
+    <section class="box calendar-box reveal">
+      <div class="calendar-header">
+        <button id="prevMonth" class="cal-nav">‹</button>
+        <h2 id="calendarTitle">Bulan</h2>
+        <button id="nextMonth" class="cal-nav">›</button>
+      </div>
+      <p class="box-sub">Klik tanggal untuk melihat kegiatan pada hari itu.</p>
+
+      <div class="cal-weekdays">
+        <span>Min</span><span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span>
+      </div>
+      <div id="calendarGrid" class="cal-grid"></div>
+
+      <div class="cal-detail" id="calDetail">
+        <h3 id="calDetailDate">Pilih tanggal</h3>
+        <ul id="calDetailList"></ul>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ===== KANBAN BOARD ===== -->
+  <section class="box board-box reveal" id="board">
+    <h2>Papan Tugas</h2>
+    <p class="box-sub">Seret kartu tugas antar kolom untuk mengubah statusnya: To Do, In Progress, Done.</p>
+
+    <div class="kanban-board">
+      <div class="kanban-col" data-status="todo">
+        <div class="kanban-col-head"><span class="kanban-dot dot-todo"></span>To Do <span class="kanban-count" id="countTodo">0</span></div>
+        <div class="kanban-drop" id="colTodo"></div>
+      </div>
+      <div class="kanban-col" data-status="inprogress">
+        <div class="kanban-col-head"><span class="kanban-dot dot-inprogress"></span>In Progress <span class="kanban-count" id="countInprogress">0</span></div>
+        <div class="kanban-drop" id="colInprogress"></div>
+      </div>
+      <div class="kanban-col" data-status="done">
+        <div class="kanban-col-head"><span class="kanban-dot dot-done"></span>Done <span class="kanban-count" id="countDone">0</span></div>
+        <div class="kanban-drop" id="colDone"></div>
+      </div>
+    </div>
+    <div class="todo-empty" id="boardEmpty">Belum ada tugas di papan. Tambahkan tugas dulu di atas! ⭐</div>
+  </section>
+
+  <!-- ===== POMODORO TIMER ===== -->
+  <section class="box pomodoro-box reveal" id="pomodoro">
+    <h2>Pomodoro Timer</h2>
+    <p class="box-sub">Fokus 25 menit, istirahat 5 menit. Hubungkan timer ke tugas yang sedang kamu kerjakan.</p>
+
+    <div class="pomodoro-shell" id="pomodoroShell">
+      <div class="pomodoro-wrap" id="pomodoroWrap">
+        <div class="pomodoro-dial">
+          <svg viewBox="0 0 200 200" class="pomodoro-ring">
+            <circle cx="100" cy="100" r="88" class="ring-track"></circle>
+            <circle cx="100" cy="100" r="88" class="ring-fill" id="pomodoroRingFill"></circle>
+          </svg>
+          <div class="pomodoro-center">
+            <span class="pomodoro-mode" id="pomodoroMode">Fokus</span>
+            <span class="pomodoro-time" id="pomodoroTime">25:00</span>
+          </div>
+        </div>
+
+        <div class="pomodoro-controls">
+          <label class="pomodoro-label" for="pomodoroTask">Sedang mengerjakan</label>
+          <select id="pomodoroTask">
+            <option value="">Tanpa tugas terpilih</option>
+          </select>
+
+          <label class="pomodoro-label pomodoro-auto-label">
+            <input type="checkbox" id="pomodoroAuto"> Auto-start sesi berikutnya
+          </label>
+
+          <div class="pomodoro-btns">
+            <button id="pomodoroStart" class="btn-add">Mulai</button>
+            <button id="pomodoroPause" class="btn-add btn-ghost" disabled>Jeda</button>
+            <button id="pomodoroReset" class="btn-add btn-ghost">Ulang</button>
+          </div>
+
+          <div class="pomodoro-stats">
+            <span>Sesi fokus selesai hari ini: <strong id="pomodoroSessionCount">0</strong></span>
+          </div>
+          <p class="pomodoro-msg" id="pomodoroMsg"></p>
+        </div>
+      </div>
+
+      <div class="lock-overlay" id="pomodoroLock">
+        <div class="lock-card">
+          <div class="lock-icon">🔒</div>
+          <h3>Fitur Pro</h3>
+          <p>Pomodoro Timer hanya tersedia untuk akun Pro. Upgrade sekarang untuk fokus tanpa batas.</p>
+          <a href="#pricing" class="btn-add">Upgrade ke Pro</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROGRESS & STREAK ===== -->
+  <section class="box progress-box reveal" id="progress">
+    <h2>Progress &amp; Streak</h2>
+    <p class="box-sub">Pantau persentase tugas yang selesai dan jaga api semangatmu tetap menyala.</p>
+
+    <div class="stat-counters">
+      <div class="stat-card">
+        <span class="stat-num" id="statTotal">0</span>
+        <span class="stat-label">Total Tugas</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num" id="statDone">0</span>
+        <span class="stat-label">Tugas Selesai</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num" id="statPending">0</span>
+        <span class="stat-label">Tugas Tertunda</span>
+      </div>
+    </div>
+
+    <div class="progress-grid">
+      <div class="progress-ring-wrap">
+        <svg viewBox="0 0 160 160" class="progress-ring">
+          <circle cx="80" cy="80" r="68" class="ring-track"></circle>
+          <circle cx="80" cy="80" r="68" class="ring-fill-progress" id="dailyRingFill"></circle>
+        </svg>
+        <div class="progress-ring-center">
+          <span class="progress-percent" id="dailyPercent">0%</span>
+          <span class="progress-caption">Hari Ini</span>
+        </div>
+      </div>
+
+      <div class="progress-week">
+        <p class="progress-week-title">Penyelesaian 7 Hari Terakhir</p>
+        <div class="week-bars" id="weekBars"></div>
+      </div>
+
+      <div class="streak-card">
+        <div class="streak-flame">🔥</div>
+        <div class="streak-count" id="streakCount">0</div>
+        <div class="streak-label">Hari Beruntun</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FLASHCARDS ===== -->
+  <section class="cards-section reveal">
+    <h2 class="section-title">Tips &amp; Artikel Seputar Todolist</h2>
+    <p class="box-sub center">Beberapa panduan singkat supaya kamu makin jago mengatur waktu bersama Starlight.</p>
+
+    <div class="flex-cards">
+      <article class="flash-card" tabindex="0">
+        <div class="flash-card-inner">
+          <div class="flash-face flash-front">
+            <div class="flash-icon">🌙</div>
+            <h3>Cara Menambah Tugas</h3>
+            <span class="flip-hint">klik untuk lihat detail ↺</span>
+          </div>
+          <div class="flash-face flash-back">
+            <p>Ketik nama kegiatan, pilih tanggal, kategori, dan prioritasnya, lalu klik tombol "Tambah". Tugas otomatis muncul di daftar, kalender, dan papan tugas.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="flash-card" tabindex="0">
+        <div class="flash-card-inner">
+          <div class="flash-face flash-front">
+            <div class="flash-icon">⭐</div>
+            <h3>Menandai Tugas Selesai</h3>
+            <span class="flip-hint">klik untuk lihat detail ↺</span>
+          </div>
+          <div class="flash-face flash-back">
+            <p>Klik kotak centang di samping tugas, atau seret kartunya ke kolom "Done" di papan tugas. Progress dan streak-mu otomatis diperbarui.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="flash-card" tabindex="0">
+        <div class="flash-card-inner">
+          <div class="flash-face flash-front">
+            <div class="flash-icon">🍅</div>
+            <h3>Pakai Pomodoro Timer</h3>
+            <span class="flip-hint">klik untuk lihat detail ↺</span>
+          </div>
+          <div class="flash-face flash-back">
+            <p>Pilih tugas yang sedang kamu kerjakan, tekan "Mulai", dan fokus selama 25 menit. Setelah itu istirahat 5 menit sebelum lanjut sesi berikutnya.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="flash-card" tabindex="0">
+        <div class="flash-card-inner">
+          <div class="flash-face flash-front">
+            <div class="flash-icon">✨</div>
+            <h3>Tips Produktif Harian</h3>
+            <span class="flip-hint">klik untuk lihat detail ↺</span>
+          </div>
+          <div class="flash-face flash-back">
+            <p>Susun 3 prioritas utama tiap pagi, kerjakan yang paling penting lebih dulu, dan beri jeda istirahat agar tetap semangat sepanjang hari.</p>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== STUDY PLAN & GOALS ===== -->
+  <section class="box goals-box reveal">
+    <h2>Study Plan &amp; Goals</h2>
+    <p class="box-sub">Tetapkan target belajar atau tujuanmu, lengkap dengan durasi dan langkah mencapainya.</p>
+
+    <form id="goalForm" class="goal-form">
+      <input type="text" id="goalTitle" placeholder="Nama goal, mis. Lancar Bahasa Inggris" required>
+      <input type="number" id="goalMonths" min="1" placeholder="Target (bulan)" required>
+
+      <div class="goal-step-composer">
+        <input type="text" id="goalStepInput" placeholder="Tulis langkah untuk mencapai goal ini...">
+        <select id="goalStepPriority" required>
+          <option value="" disabled selected>Pilih Prioritas</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+        <button type="button" id="addStepBtn" class="btn-add-step">+ Langkah</button>
+      </div>
+
+      <ul id="goalStepsPreview" class="goal-steps-preview"></ul>
+
+      <button type="submit" class="btn-add">+ Simpan Goal</button>
+    </form>
+
+    <div id="goalList" class="goal-list"></div>
+    <div class="todo-empty" id="goalEmpty">Belum ada goal. Tuliskan target pertamamu! 🌟</div>
+  </section>
+
+  <!-- ===== ACCOUNT & SETTINGS ===== -->
+  <section class="box account-box reveal" id="account">
+    <h2>Akun &amp; Pengaturan</h2>
+    <p class="box-sub">Kelola status langganan, tema, dan data tugasmu di sini.</p>
+
+    <div class="account-grid">
+
+      <div class="account-card">
+        <h4>Status Akun</h4>
+        <div class="account-status-row">
+          <span class="plan-badge plan-badge-lg" id="accountBadge">FREE</span>
+          <span id="accountExpiry" class="account-expiry"></span>
+        </div>
+        <p class="account-hint" id="accountHint">Kamu masih pakai paket Gratis. Maksimal 7 tugas aktif, tanpa Pomodoro &amp; backup data.</p>
+        <a href="#pricing" class="btn-add price-cta">Lihat Paket Pro</a>
+      </div>
+
+      <div class="account-card">
+        <h4>Kode Lisensi / Voucher</h4>
+        <p class="account-hint">Punya kode promo atau lisensi Pro? Masukkan di sini.</p>
+        <div class="promo-row">
+          <input type="text" id="promoInput" placeholder="Contoh: STARLIGHTPRO">
+          <button id="promoBtn" class="btn-add">Tukar Kode</button>
+        </div>
+        <p class="promo-msg" id="promoMsg"></p>
+      </div>
+
+      <div class="account-card">
+        <h4>Tema &amp; Tampilan</h4>
+        <p class="account-hint">Ganti mode gelap/terang dan warna aksen favoritmu.</p>
+        <div class="settings-shell" id="themeShell">
+          <div class="theme-row">
+            <button type="button" class="theme-toggle-btn" id="themeToggleBtn">🌙 Mode Gelap</button>
+          </div>
+          <div class="accent-row">
+            <button type="button" class="accent-swatch accent-sage active" data-accent="sage" title="Sage Green"></button>
+            <button type="button" class="accent-swatch accent-gold" data-accent="gold" title="Beige Gold"></button>
+            <button type="button" class="accent-swatch accent-slate" data-accent="slate" title="Slate Gray"></button>
+          </div>
+          <div class="lock-overlay lock-overlay-inline" id="themeLock">
+            <div class="lock-card lock-card-sm">
+              <div class="lock-icon">🔒</div>
+              <p>Ganti tema &amp; warna aksen khusus Pro.</p>
+              <a href="#pricing" class="btn-add btn-ghost">Upgrade</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="account-card">
+        <h4>Backup Data</h4>
+        <p class="account-hint">Ekspor tugasmu sebagai JSON/CSV, atau impor kembali dari file backup.</p>
+        <div class="settings-shell" id="backupShell">
+          <div class="backup-row">
+            <button type="button" class="btn-add btn-ghost" id="exportJsonBtn">⬇ Export JSON</button>
+            <button type="button" class="btn-add btn-ghost" id="exportCsvBtn">⬇ Export CSV</button>
+            <button type="button" class="btn-add btn-ghost" id="importBtn">⬆ Import JSON</button>
+            <input type="file" id="importFile" accept="application/json" hidden>
+          </div>
+          <div class="lock-overlay lock-overlay-inline" id="backupLock">
+            <div class="lock-card lock-card-sm">
+              <div class="lock-icon">🔒</div>
+              <p>Export &amp; import data khusus Pro.</p>
+              <a href="#pricing" class="btn-add btn-ghost">Upgrade</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="account-card">
+        <h4>Notifikasi</h4>
+        <p class="account-hint">Aktifkan suara dan notifikasi browser untuk tugas yang mendekati tenggat.</p>
+        <label class="notif-check"><input type="checkbox" id="soundToggle" checked> Suara efek (centang &amp; alarm)</label>
+        <button type="button" class="btn-add btn-ghost" id="notifPermBtn">🔔 Izinkan Notifikasi Browser</button>
+        <p class="promo-msg" id="notifMsg"></p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== SUBSCRIPTION / PRICING ===== -->
+  <section class="pricing-section reveal" id="pricing">
+    <h2 class="section-title">Pilih Paket Starlight</h2>
+    <p class="box-sub center">Mulai gratis, atau upgrade ke Pro untuk fitur produktivitas tanpa batas.</p>
+
+    <div class="pricing-grid">
+      <div class="price-card" data-tier="free">
+        <div class="price-tier">Gratis</div>
+        <div class="price-amount">Rp0</div>
+        <ul class="price-features">
+          <li>Maksimal 7 tugas aktif</li>
+          <li>Papan &amp; kalender dasar</li>
+          <li>Tanpa Pomodoro Timer</li>
+          <li>Tanpa export/import data</li>
+        </ul>
+        <button class="btn-add btn-ghost price-cta" type="button" id="freeCta">Paket Saat Ini</button>
+      </div>
+
+      <div class="price-card" data-tier="pro" data-duration="1" data-price="49000" data-label="1 Bulan">
+        <div class="price-tier">1 Bulan <span class="price-badge">Pro</span></div>
+        <div class="price-amount">Rp49.000</div>
+        <ul class="price-features">
+          <li>Unlimited task &amp; sub-tasks</li>
+          <li>Akses Pomodoro Timer &amp; Analitik Mingguan</li>
+          <li>Bebas ganti tema &amp; warna aksen</li>
+          <li>Export/Import Backup Data</li>
+        </ul>
+        <button class="btn-add price-cta" type="button">Pilih Paket</button>
+      </div>
+
+      <div class="price-card" data-tier="pro" data-duration="3" data-price="129000" data-label="3 Bulan">
+        <div class="price-tier">3 Bulan <span class="price-badge">Pro</span></div>
+        <div class="price-amount">Rp129.000</div>
+        <ul class="price-features">
+          <li>Unlimited task &amp; sub-tasks</li>
+          <li>Akses Pomodoro Timer &amp; Analitik Mingguan</li>
+          <li>Bebas ganti tema &amp; warna aksen</li>
+          <li>Export/Import Backup Data</li>
+        </ul>
+        <button class="btn-add price-cta" type="button">Pilih Paket</button>
+      </div>
+
+      <div class="price-card price-card-best" data-tier="pro" data-duration="6" data-price="229000" data-label="6 Bulan">
+        <div class="price-ribbon">Best Value</div>
+        <div class="price-tier">6 Bulan <span class="price-badge">Pro</span></div>
+        <div class="price-amount">Rp229.000</div>
+        <ul class="price-features">
+          <li>Unlimited task &amp; sub-tasks</li>
+          <li>Akses Pomodoro Timer &amp; Analitik Mingguan</li>
+          <li>Bebas ganti tema &amp; warna aksen</li>
+          <li>Export/Import Backup Data</li>
+          <li>Diskon khusus paket 6 bulan</li>
+        </ul>
+        <button class="btn-add price-cta" type="button">Pilih Paket</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== ABOUT US / FOOTER ===== -->
+<footer class="footer" id="about">
+  <div class="footer-box box reveal">
+    <div class="footer-brand">
+      <span class="brand-star">✦</span>
+      <span class="brand-name">Starlight <span class="brand-name-light">Todolist</span></span>
+    </div>
+    <p class="footer-desc">Teman harian untuk mencatat rencana, mengatur jadwal, dan menuntaskan tugas tanpa ribet.</p>
+    <div class="footer-contact">
+      <span>📧 starlighttodo@gmail.com</span>
+      <span>📷 @starlight_todolist</span>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Reserved by StarlightTodoList</p>
+  </div>
+</footer>
+
+<!-- ===== MODAL: CHECKOUT PAYMENT ===== -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal-box">
+    <button class="modal-close" id="checkoutClose" aria-label="Tutup">✕</button>
+    <h3 class="modal-title">Checkout Pembayaran</h3>
+
+    <div class="checkout-summary">
+      <div class="summary-row"><span>Paket</span><strong id="sumPlan">-</strong></div>
+      <div class="summary-row"><span>Durasi</span><strong id="sumDuration">-</strong></div>
+      <div class="summary-row"><span>Harga</span><strong id="sumPrice">-</strong></div>
+      <div class="summary-row"><span>Kode Unik</span><strong id="sumCode">-</strong></div>
+      <div class="summary-row summary-total"><span>Total Bayar</span><strong id="sumTotal">-</strong></div>
+    </div>
+
+    <div class="pay-method-tabs">
+      <button type="button" class="pay-tab active" data-method="qris">QRIS</button>
+      <button type="button" class="pay-tab" data-method="va">Virtual Account</button>
+    </div>
+
+    <div class="pay-method-panel" id="payQris">
+      <p class="pay-desc">Scan kode di bawah ini menggunakan GoPay, OVO, Dana, atau ShopeePay.</p>
+      <div class="qris-box">
+        <svg viewBox="0 0 120 120" class="qris-fake">
+          <rect x="0" y="0" width="120" height="120" fill="#fff"></rect>
+          <g fill="#2b303a" id="qrisPattern"></g>
+        </svg>
+      </div>
+      <p class="pay-note">QRIS akan otomatis kedaluwarsa dalam 15 menit.</p>
+    </div>
+
+    <div class="pay-method-panel" id="payVa" style="display:none;">
+      <p class="pay-desc">Pilih bank tujuan transfer Virtual Account.</p>
+      <div class="va-bank-list">
+        <button type="button" class="va-bank active" data-bank="BCA">BCA</button>
+        <button type="button" class="va-bank" data-bank="Mandiri">Mandiri</button>
+        <button type="button" class="va-bank" data-bank="BNI">BNI</button>
+        <button type="button" class="va-bank" data-bank="BRI">BRI</button>
+      </div>
+      <div class="va-number-box">
+        <span class="va-label">No. Virtual Account (<span id="vaBankName">BCA</span>)</span>
+        <div class="va-number" id="vaNumber">-</div>
+      </div>
+      <p class="pay-note">Transfer sesuai nominal Total Bayar (termasuk kode unik) agar terverifikasi otomatis.</p>
+    </div>
+
+    <button class="btn-add confirm-pay-btn" id="confirmPayBtn">✅ Konfirmasi Pembayaran</button>
+    <p class="pay-sim-note">*Simulasi: klik tombol di atas untuk mensimulasikan pembayaran berhasil.</p>
+  </div>
+</div>
+
+<!-- ===== MODAL: INVOICE / STRUK ===== -->
+<div class="modal-overlay" id="invoiceModal">
+  <div class="modal-box" id="invoiceBox">
+    <button class="modal-close no-print" id="invoiceClose" aria-label="Tutup">✕</button>
+    <div class="invoice-head">
+      <span class="brand-star">✦</span>
+      <span class="invoice-brand">Starlight Todolist</span>
+    </div>
+    <h3 class="modal-title invoice-success">🎉 Pembayaran Berhasil!</h3>
+    <div class="invoice-detail">
+      <div class="summary-row"><span>No. Invoice</span><strong id="invNumber">-</strong></div>
+      <div class="summary-row"><span>Tanggal</span><strong id="invDate">-</strong></div>
+      <div class="summary-row"><span>Paket</span><strong id="invPlan">-</strong></div>
+      <div class="summary-row"><span>Metode</span><strong id="invMethod">-</strong></div>
+      <div class="summary-row"><span>Masa Aktif</span><strong id="invExpiry">-</strong></div>
+      <div class="summary-row summary-total"><span>Total Dibayar</span><strong id="invTotal">-</strong></div>
+    </div>
+    <p class="invoice-thanks">Terima kasih! Akunmu sekarang aktif sebagai <strong>Pro</strong>. Selamat menikmati produktivitas tanpa batas ✨</p>
+    <div class="invoice-actions no-print">
+      <button class="btn-add btn-ghost" id="invoicePrintBtn">🖨️ Cetak</button>
+      <button class="btn-add" id="invoiceDownloadBtn">⬇ Unduh Struk</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
